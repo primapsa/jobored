@@ -1,0 +1,84 @@
+
+.App {
+    display: flex;
+    flex-direction: column;
+}
+
+.appWrapper {
+    width: 80vw;
+    margin: 0 auto;
+}
+.header {
+    background: #FFFFFF;
+    height: 84px;
+    outline: 2px solid greenyellow;
+}
+.headerContainer {
+    display: flex;
+}
+.filter {
+    height: 360px;
+    width: 315px;
+    background: #FFFFFF;
+    border: 1px solid #EAEBED;
+    border-radius: 12px;
+
+}
+.searchField {
+    width: 773px;
+    height: 48px;
+    background: #FFFFFF;
+    border: 1px solid #EAEBED;
+    border-radius: 8px;
+}
+.item {
+    width: 773px;
+    height: 137px;
+    background: #FFFFFF;
+    border: 1px solid #EAEBED;
+    border-radius: 12px;
+}
+.jobSearchContainer {
+    display: flex;
+ }
+.jobSearch {
+    display: flex;
+    flex-direction: column;
+}
+.main {
+    background: #F5F5F5;
+}
+.App-logo {
+    height: 40vmin;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
+}
+
+.App-header {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+
+.App-link {
+    color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
