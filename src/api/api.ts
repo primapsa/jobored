@@ -20,13 +20,15 @@ const axiosInstance = axios.create({
 })
 
 export const jobAPI = {
-    getVacancies: (count: number = DEFAULT_ITEM_PER_PAGE, page: number = DEFAULT_PAGE_NUMBER): Promise<any> => axiosInstance.get<GetVacanciesResponseType>(`vacancies/?count=${count}&page=${page}`)
-        .then(response => response.data)
-        .then(response => response.objects),
+    getVacancies: (count: number = DEFAULT_ITEM_PER_PAGE, page: number = DEFAULT_PAGE_NUMBER): Promise<VacancyResponseType[]> =>
+        axiosInstance.get<GetVacanciesResponseType>(`vacancies/?count=${count}&page=${page}`)
+            .then(response => response.data)
+            .then(response => response.objects),
+
     getAuthToken: (): Promise<string> => axiosInstance
-        .get<AuthTokenResponseType>(`oauth2/password/?login=${AUTH_LOGIN}&password=${AUTH_PWD}&client_id${CLIENT_ID}=&client_secret=${API_KEY}&hr=${CLIENT_HR}`)
-        .then(response => response.data)
-        .then(response => response.access_token)
+        .get<AuthTokenResponseType>(`oauth2/password/?login=${AUTH_LOGIN}&password=${AUTH_PWD}
+        &client_id${CLIENT_ID}=&client_secret=${API_KEY}&hr=${CLIENT_HR}`)
+        .then(response => response.data.access_token)
 }
 
 type AuthTokenResponseType = {
@@ -43,4 +45,93 @@ type GetVacanciesResponseType = {
     subscription_active: boolean
     subscription_id: number
     total: number
+}
+type VacancyResponseType = {
+    canEdit: boolean
+    is_closed: boolean
+    id: number
+    id_client: number
+    payment_from: number
+    payment_to: number
+    date_pub_to: number
+    date_archived: number
+    date_published: number
+    address: null | string
+    profession: string | null
+    work: string | null
+    compensation: string | null
+    candidat: string | null
+    metro: string[]
+    currency: string
+    vacancyRichText: string | null
+    covid_vaccination_requirement: any
+    external_url: null | string
+    contact: string | null
+    moveable: boolean
+    agreement: boolean
+    anonymous: boolean
+    is_archive: boolean
+    is_storage: boolean
+    type_of_work: {
+        id: number,
+        title: string
+    },
+    place_of_work: {
+        id: number,
+        title: string
+    }
+    education: {
+        id: number,
+        title: string
+    }
+    experience: {
+        id: number,
+        title: string
+    }
+    maritalstatus: {
+        id: number,
+        title: string
+    }
+    children: {
+        id: number,
+        title: string
+    }
+    client: any,
+    languages: string[],
+    driving_licence: string[],
+    catalogues: any[],
+    agency: {
+        id: number,
+        title: string
+    },
+    town: {
+        id: number,
+        title: string,
+        declension: string
+        hasMetro: boolean
+        genitive: string
+    },
+    already_sent_on_vacancy: boolean,
+    rejected: boolean,
+    response_info: any[],
+    phone: string,
+    phones: any[],
+    fax: null | string,
+    faxes: null | string,
+    favorite: boolean,
+    client_logo: string
+    highlight: boolean,
+    age_from: number,
+    age_to: number,
+    gender: {
+        id: number,
+        title: string
+    },
+    firm_name: string
+    firm_activity: string
+    link: string
+    isBlacklisted: boolean,
+    latitude: null | string,
+    longitude: null | string
+
 }
