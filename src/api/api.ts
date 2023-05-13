@@ -1,4 +1,5 @@
 import axios from "axios";
+import {log} from "util";
 
 const ACCESS_TOKEN = 'v3.r.137440105.ade1a5c7318e723eb2ec1d4a49ea83e5294212f5.0303c9a4462879e6f3cede9ac751def925c7bf24'
 const SECRET_KEY = 'GEU4nvd3rej*jeh.eqp'
@@ -7,7 +8,7 @@ const AUTH_LOGIN = 'sergei.stralenia@gmail.com'
 const AUTH_PWD = 'paralect123'
 const CLIENT_ID = '2356'
 const DEFAULT_PAGE_NUMBER = 0
-const DEFAULT_ITEM_PER_PAGE = 4
+const DEFAULT_ITEM_PER_PAGE = 50
 const CLIENT_HR = 0;
 
 const axiosInstance = axios.create({
@@ -20,17 +21,30 @@ const axiosInstance = axios.create({
 })
 
 export const jobAPI = {
-    getVacancies: (count: number = DEFAULT_ITEM_PER_PAGE, page: number = DEFAULT_PAGE_NUMBER): Promise<VacancyResponseType[]> =>
+    getVacancies: (page: number = DEFAULT_PAGE_NUMBER, count: number = DEFAULT_ITEM_PER_PAGE,): Promise<VacancyResponseType[]> =>
         axiosInstance.get<GetVacanciesResponseType>(`vacancies/?count=${count}&page=${page}`)
             .then(response => response.data)
             .then(response => response.objects),
 
     getAuthToken: (): Promise<string> => axiosInstance
-        .get<AuthTokenResponseType>(`oauth2/password/?login=${AUTH_LOGIN}&password=${AUTH_PWD}
-        &client_id${CLIENT_ID}=&client_secret=${API_KEY}&hr=${CLIENT_HR}`)
-        .then(response => response.data.access_token)
-}
+        .get<AuthTokenResponseType>(`oauth2/password/?login=${AUTH_LOGIN}&password=${AUTH_PWD}&client_id${CLIENT_ID}=&client_secret=${API_KEY}&hr=${CLIENT_HR}`)
+        .then(response => response.data.access_token),
 
+    getVacanciesById: (ids: number[]): Promise<ResponseType> => {
+        const idsQuery = ids.join('&ids[]=')
+        return axiosInstance.get<GetVacanciesResponseType>(`vacancies/?ids=${idsQuery}`)
+            .then(response => response.data)
+    }
+
+
+}
+type ResponseType = {
+    objects: VacancyResponseType[]
+    total: number
+    more: boolean
+    subscription_id: number
+    subscription_active: boolean
+}
 type AuthTokenResponseType = {
     access_token: string
     refresh_token: string
@@ -46,7 +60,7 @@ type GetVacanciesResponseType = {
     subscription_id: number
     total: number
 }
-type VacancyResponseType = {
+export type VacancyResponseType = {
     canEdit: boolean
     is_closed: boolean
     id: number
@@ -57,13 +71,13 @@ type VacancyResponseType = {
     date_archived: number
     date_published: number
     address: null | string
-    profession: string | null
+    profession: string
     work: string | null
     compensation: string | null
     candidat: string | null
     metro: string[]
     currency: string
-    vacancyRichText: string | null
+    vacancyRichText: string
     covid_vaccination_requirement: any
     external_url: null | string
     contact: string | null
