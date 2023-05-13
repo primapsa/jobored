@@ -1,26 +1,23 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './App.module.css';
+import Header from "./components/Header/Header";
+import Main from "./features/Main/Main";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import Favorites from "./features/Favorites/Favorites";
+import Vacancy from "./features/Vacancy/Vacancy";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App = () => {
+    return (
+        <BrowserRouter>
+            <Header/>
+            <Routes>
+                <Route path={'/'} element={<Main/>}/>
+                <Route path={'/vacancy/:id'} element={<Vacancy/>}/>
+                <Route path={'/vacancies'} element={<Main/>}/>
+                <Route path={'/favorites'} element={<Favorites/>}/>
+            </Routes>
+        </BrowserRouter>
+    )
 }
 
 export default App;
