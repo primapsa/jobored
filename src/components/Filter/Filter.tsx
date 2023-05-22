@@ -8,21 +8,20 @@ import {
     addCurrentCatalog,
     addPaymentFromValue,
     addPaymentToValue,
-    PaymentType,
-    resetFilter
+    clearSearchQueries,
+    fetchActualCatalogues,
+    PaymentType
 } from "../../redux/filterReducer";
 import {fetchVacanciesByQueryString} from "../../redux/jobReducer";
 import {useFilterStyle} from "./filterStyle";
+import {INPUTS} from "../../const/inputs";
+import {COLORS} from "../../const/colors";
 
-const INPUT_STEP = 1000;
-const INPUT_MIN = 0;
 const Filter = () => {
     const {classes} = useFilterStyle();
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        //  dispatch<AppDispatch>(fetchCatalogues())
-    }, [])
+    useEffect(() => dispatch<AppDispatch>(fetchActualCatalogues()), [])
 
     const catalogState = useSelector<AppStateType, CataloguesType[]>(state => state.filter.fields.catalogues)
     const currentCatalog = useSelector<AppStateType, null | string>(state => state.filter.fields.currentCatalog)
@@ -35,8 +34,7 @@ const Filter = () => {
     const addPaymentFromHandler = (value: string | number) => dispatch(addPaymentFromValue(Number(value)))
     const addPaymentToHandler = (value: number | string) => dispatch(addPaymentToValue(Number(value)))
     const onClickHandler = () => dispatch<AppDispatch>(fetchVacanciesByQueryString())
-    const resetFilterHandler = () => dispatch(resetFilter())
-
+    const resetFilterHandler = () => dispatch<AppDispatch>(clearSearchQueries())
 
     return (
         <Paper className={classes.container}>
@@ -47,11 +45,16 @@ const Filter = () => {
                         onClick={resetFilterHandler}
                         rightIcon={<IconX/>}
                         className={classes.reset}
-                        classNames={{label: classes.label, rightIcon: classes.rightIcon}}>Сбросить все</Button>
+                        classNames={{
+                            label: classes.label,
+                            rightIcon: classes.rightIcon
+                        }}>
+                        Сбросить все
+                    </Button>
                 </Flex>
                 <form>
-
                     <Select
+                        data-elem="industry-select"
                         mt="md" withinPortal
                         data={catalog}
                         placeholder="Выберите отрасль"
@@ -63,14 +66,15 @@ const Filter = () => {
                             input: classes.select,
                             rightSection: classes.selectRightSection
                         }}
-                        rightSection={<IconChevronDown color={'#ACADB9'}/>}/>
+                        rightSection={<IconChevronDown color={COLORS.GRAY500}/>}/>
 
                     <NumberInput
+                        data-elem="salary-from-input"
                         placeholder="От"
                         onChange={addPaymentFromHandler}
                         value={paymentFromValue || ''}
-                        step={INPUT_STEP} min={INPUT_MIN}
-                        startValue={1000}
+                        step={INPUTS.STEP} min={INPUTS.MIN}
+                        startValue={INPUTS.START}
                         label={'Оклад'}
                         classNames={{
                             label: classes.numberTitle,
@@ -80,18 +84,19 @@ const Filter = () => {
                             rightSection: classes.selectRightSection
                         }}/>
                     <NumberInput
+                        data-elem="salary-to-input"
                         className={classes.imputTo}
                         placeholder="До"
                         onChange={addPaymentToHandler}
                         value={paymentToValue || ''}
-                        step={INPUT_STEP} min={Number(paymentFromValue) || (INPUT_MIN + INPUT_STEP)}
+                        step={INPUTS.STEP} min={Number(paymentFromValue) || (INPUTS.MIN + INPUTS.STEP)}
                         classNames={{
                             input: classes.select,
                             controlUp: classes.numberUp,
                             controlDown: classes.numberDown,
                             rightSection: classes.selectRightSection
                         }}/>
-                    <Button className={classes.submit} onClick={onClickHandler}>Применить</Button>
+                    <Button data-elem="search-button" className={classes.submit} onClick={onClickHandler}>Применить</Button>
                 </form>
             </Flex>
         </Paper>
