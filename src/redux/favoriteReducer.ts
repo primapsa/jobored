@@ -1,12 +1,15 @@
 import {jobAPI, VacancyResponseType} from "../api/api";
-import {AppDispatch} from "./store";
+import {AppDispatch, AppStateType} from "./store";
 import {localStorageAPI} from "../api/localStorageAPI";
-import {toggleFavoriteJob} from "./jobReducer";
+import {JobStateStatusType, toggleFavoriteJob} from "./jobReducer";
+import {STATUSES} from "../const/statuses";
+import {addAppStatus} from "./appReducer";
 
 const initial: FavoriteStateType = {
     vacancies: [],
-    status: '',
-    page: 0
+    status: 'idle',
+    page: 0,
+    total: 0
 }
 
 export const favoriteReducer = (state: FavoriteStateType = initial, action: ActionType): FavoriteStateType => {
@@ -15,46 +18,77 @@ export const favoriteReducer = (state: FavoriteStateType = initial, action: Acti
             return {...state, vacancies: [...state.vacancies, action.payload.vacancy]}
         case "REMOVE-FAVORITE-VACANCY":
             return {...state, vacancies: state.vacancies.filter(v => v.id !== action.payload.id)}
-        case "ADD-PAGE-VACANCY":
+        case "ADD-PAGE-FAVORITE":
             return {...state, page: action.payload.page}
         case "ADD-FAVORITE-VACANCIES":
-            return {...state, vacancies: [...action.payload.vacancies]}
+            return {...state, vacancies: action.payload.vacancies.map(v => ({...v, favorite: true}))}
+        case "ADD-TOTAL-FAVORITE":
+            return {...state, total: action.payload.total}
+        case "ADD-FAVORITE-STATUS":
+            return {...state, status: action.payload.status}
         default:
             return state
     }
 }
 
 const addFavorite = (vacancy: VacancyResponseType) => ({type: 'ADD-FAVORITE-VACANCY', payload: {vacancy}} as const)
+export const addPageStatus = (status: JobStateStatusType) => ({type: 'ADD-FAVORITE-STATUS', payload: {status}} as const)
+const toggleFavoriteVacancy = (id: number) => ({type: 'TOGGLE-FAVORITE-VACANCY', payload: {id}} as const)
 const addFavorites = (vacancies: VacancyResponseType[]) => ({
     type: 'ADD-FAVORITE-VACANCIES',
     payload: {vacancies}
 } as const)
 const removeFavorite = (id: number) => ({type: 'REMOVE-FAVORITE-VACANCY', payload: {id}} as const)
-const addPage = (page: number) => ({type: 'ADD-PAGE-VACANCY', payload: {page}} as const)
+export const addPageFavorite = (page: number) => ({type: 'ADD-PAGE-FAVORITE', payload: {page}} as const)
+const addTotalFavorites = (total: number) => ({type: 'ADD-TOTAL-FAVORITE', payload: {total}} as const)
 
-export const setFavorite = (vacancy: VacancyResponseType, isFavorite: boolean) => (dispatch: AppDispatch) => {
-    localStorageAPI.set('jobored', vacancy.id).then(response => {
-            dispatch(toggleFavoriteJob(vacancy.id, isFavorite))
-            dispatch(addFavorite(vacancy))
-    }
-    )
+export const setFavorite = (id: number, isFavorite: boolean) => (dispatch: AppDispatch) => {
+    localStorageAPI.set('jobored', id).then(response => {
+            dispatch(toggleFavoriteJob(id, isFavorite))
+            dispatch(addTotalFavorites(response.length))
+        }
+    ).catch(err => dispatch(addAppStatus(STATUSES.ERROR, err.message)))
 }
 
-export const fetchFavorite = () => (dispatch: AppDispatch) => {
+export const fetchFavorite = (page?: number, count?: number) => (dispatch: AppDispatch) => {
+    dispatch(addPageStatus(STATUSES.LOADING))
     localStorageAPI.get('jobored')
-        .then(response => jobAPI.getVacanciesById(response))
-        .then(favorites => dispatch(addFavorites(favorites.objects)))
-        .catch(err => console.log(err))
+        .then(favorites => jobAPI.getVacanciesById(favorites, page, count)
+            .then(vacancies => ({vacancies, favorites})))
+        .then(
+            response => {
+                dispatch(addFavorites(response.vacancies))
+                dispatch(addTotalFavorites(response.favorites.length))
+                dispatch(addPageStatus(STATUSES.IDLE))
+            }
+        )
+        .catch(err => dispatch(addAppStatus(STATUSES.ERROR, err.message)))
 }
 
-
+export const updateFavorite = (id: number, isFavorite: boolean) => (dispatch: AppDispatch, getState: () => AppStateType) => {
+    const state = getState();
+    dispatch(setFavorite(id, isFavorite))
+    dispatch(fetchFavorite(state.favorite.page))
+}
 type FavoriteStateType = {
     vacancies: VacancyResponseType[]
-    status: string
+    status: JobStateStatusType
     page: number
+    total: number
 }
-type ActionType = AddFavoriteType | RemoveFavoriteType | AddPageType | AddFavoritesType
+type ActionType =
+    AddFavoriteType
+    | RemoveFavoriteType
+    | AddPageType
+    | AddFavoritesType
+    | ToggleFavoriteVacancyType
+    | AddTotalFavoritesType
+    | AddPageStatusType
+
 type AddFavoriteType = ReturnType<typeof addFavorite>
+type AddPageStatusType = ReturnType<typeof addPageStatus>
 type AddFavoritesType = ReturnType<typeof addFavorites>
 type RemoveFavoriteType = ReturnType<typeof removeFavorite>
-type AddPageType = ReturnType<typeof addPage>
+type ToggleFavoriteVacancyType = ReturnType<typeof toggleFavoriteVacancy>
+type AddTotalFavoritesType = ReturnType<typeof addTotalFavorites>
+type AddPageType = ReturnType<typeof addPageFavorite>
