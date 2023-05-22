@@ -1,10 +1,16 @@
 import React from 'react';
+import {TypographyStylesProvider, Paper, Container, createStyles, rem} from "@mantine/core";
+import {useDescriptopnStyles} from "./descriptionStyle";
 
 const Description = ({text}: DescriptionPropsType) => {
+    const {classes} = useDescriptopnStyles()
     return (
-        <div>
-            {text}
-        </div>
+        <Paper className={classes.paper}>
+
+            <TypographyStylesProvider>
+                <div dangerouslySetInnerHTML={{__html: text}}/>
+            </TypographyStylesProvider>
+        </Paper>
     );
 };
 
