@@ -8,14 +8,17 @@
     width: 80vw;
     margin: 0 auto;
 }
+
 .header {
     background: #FFFFFF;
     height: 84px;
     outline: 2px solid greenyellow;
 }
+
 .headerContainer {
     display: flex;
 }
+
 .filter {
     height: 360px;
     width: 315px;
@@ -24,6 +27,7 @@
     border-radius: 12px;
 
 }
+
 .searchField {
     width: 773px;
     height: 48px;
@@ -31,22 +35,104 @@
     border: 1px solid #EAEBED;
     border-radius: 8px;
 }
+
 .item {
+    margin-top: 16px;
     width: 773px;
     height: 137px;
+    padding: 24px;
     background: #FFFFFF;
     border: 1px solid #EAEBED;
     border-radius: 12px;
 }
+
+.itemHeader {
+    display: flex;
+    justify-content: space-between;
+}
+
+.itemFooter {
+    display: flex;
+}
+
+.itemMain {
+    display: flex;
+}
+
+.itemTitle {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 24px;
+    color: #5E96FC;
+}
+
+.itemFavoriteFilled {
+    width: 20px;
+    height: 20px;
+    background-color: #5E96FC;
+}
+.itemFavorite{
+    width: 20px;
+    height: 20px;
+    border: 1px solid #5E96FC;
+}
+.itemSalary {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    color: #232134;
+}
+
+.itemDelimeter {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 21px;
+    color: #7B7C88;
+}
+
+.itemWorkType {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    color: #232134;
+}
+
+.itemLocationPoint {
+    width: 15px;
+    height: 15px;
+    background-color: #282c34;
+}
+.itemLocationTown {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #232134;
+}
 .jobSearchContainer {
     display: flex;
- }
+}
+
 .jobSearch {
     display: flex;
     flex-direction: column;
 }
+
 .main {
     background: #F5F5F5;
+}
+.favorite {
+    display: flex;
+    flex-direction: column;
 }
 .App-logo {
     height: 40vmin;

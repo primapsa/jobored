@@ -5,7 +5,16 @@ export const useFilterStyle = createStyles((theme) => ({
         width: rem(315),
         padding: rem(19),
         border: `1px solid #EAEBED`,
-        borderRadius: rem(12)
+        borderRadius: rem(12),
+        [theme.fn.smallerThan('md')]: {
+            maxWidth: rem(270),
+            width: `100%`
+        },
+        [theme.fn.smallerThan('sm')]: {
+            margin: `${rem(20)} auto`,
+            maxWidth: rem(400),
+            width: `100%`
+        },
 
     },
     header: {
@@ -13,7 +22,7 @@ export const useFilterStyle = createStyles((theme) => ({
         fontWeight: 700,
         fontStyle: 'normal',
         lineHeight: rem('20px'),
-        letterSpacing: rem(.2)
+
 
     },
     title: {
@@ -37,7 +46,7 @@ export const useFilterStyle = createStyles((theme) => ({
     },
     label: {
         display: "flex",
-        letterSpacing: rem(.4)
+
     },
     rightIcon: {
         width: rem('16px'),
@@ -51,7 +60,10 @@ export const useFilterStyle = createStyles((theme) => ({
         border: `1px solid #D5D6D`,
         borderRadius: rem(8),
         boxSizing: 'border-box',
-        letterSpacing: rem(.5),
+        [theme.fn.smallerThan('md')]: {
+            width: `100%`
+        },
+
     },
     selectRightSection: {
         right: rem(6),
@@ -92,7 +104,10 @@ export const useFilterStyle = createStyles((theme) => ({
         fontWeight: 500,
         lineHeight: rem(21),
         color: '#FFFFFF',
-        letterSpacing: rem(.5),
+        [theme.fn.smallerThan('md')]: {
+            width: `100%`
+        },
+
     }
 
 
