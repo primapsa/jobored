@@ -1,65 +1,26 @@
 import React from 'react';
 import './App.module.css';
-import Header from "./components/Header/Header";
 import Main from "./features/Main/Main";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Favorites from "./features/Favorites/Favorites";
 import Vacancy from "./features/Vacancy/Vacancy";
-import {Container, MantineProvider, rem} from "@mantine/core";
+import {Container, MantineProvider} from "@mantine/core";
 import {HeaderSimple} from "./components/Header/HeaderMantine";
+import {appTheme, styles} from "./appTheme";
+import {HeaderLinks, ROUTES} from "./const/routes";
 
-const styles = {width: '100%', padding: 0, maxWidth: '100%'}
 const App = () => {
     return (
-        <MantineProvider withGlobalStyles withNormalizeCSS theme={{
-            globalStyles : (theme) => ({
-                body: {
-                    backgroundColor: '#F5F5F5',
-                    boxSizing: 'border-box',
-                    position: "relative"
-
-                },
-                input: {
-                    "::placeholder": {
-                        fontSize: rem(14)
-                    }
-                },
-                '.active': {
-                    color: `#5E96FC`
-                },
-            }),
-            breakpoints: {
-                xs: '30em',
-                sm: '48em',
-                md: '64em',
-                lm: '52em',
-                lg: '74em',
-                xl: '90em',
-            },
-            fontFamily: "Inter, sans-serif",
-            loader: "oval"
-
-
-            // components: {
-            //     Text: {
-            //         styles: () => ({
-            //             root: {
-            //                 fontSize: '50px'
-            //             }
-            //         })
-            //     }
-            // }
-
-        }}>
+        <MantineProvider withGlobalStyles withNormalizeCSS theme={appTheme}>
             <BrowserRouter>
                 <Container sx={styles}>
                     <HeaderSimple
-                        links={[{link: '/vacancies', label: 'Поиск Вакансий'}, {link: '/favorites', label: 'Избранное'}]}/>
+                        links={HeaderLinks}/>
                     <Routes>
                         <Route path={'/'} element={<Main/>}/>
-                        <Route path={'/vacancy/:id'} element={<Vacancy/>}/>
-                        <Route path={'/vacancies'} element={<Main/>}/>
-                        <Route path={'/favorites'} element={<Favorites/>}/>
+                        <Route path={`/${ROUTES.VACANCY}/:id`} element={<Vacancy/>}/>
+                        <Route path={`/${ROUTES.VACANCIES}`} element={<Main/>}/>
+                        <Route path={`/${ROUTES.FAVORITES}`} element={<Favorites/>}/>
                     </Routes>
                 </Container>
             </BrowserRouter>
