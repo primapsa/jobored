@@ -1,4 +1,4 @@
-import {DEFAULT_ITEM_PER_PAGE, DEFAULT_PAGE_NUMBER, jobAPI, VacancyResponseType} from "../api/api";
+import {jobAPI, VacancyResponseType} from "../api/api";
 import {AppDispatch, AppStateType} from "./store";
 import {localStorageAPI} from "../api/localStorageAPI";
 import {makeSearchtQuery} from "../utils/makeInputQuery";
@@ -14,15 +14,12 @@ const initial: JobStateType = {
     total: 0
 }
 export const jobReducer = (state: JobStateType = initial, action: ActionType): JobStateType => {
-
     switch (action.type) {
         case "ADD-VACANCIES":
             return {
                 ...state,
-                list: action.payload.list.map(v => action.payload.favorites.includes(v.id) ? {
-                    ...v,
-                    favorite: true
-                } : v),
+                list: action.payload.list
+                    .map(v => action.payload.favorites.includes(v.id) ? {...v, favorite: true } : v),
                 total: action.payload.total
             }
         case "TOGGLE-FAVORITE-STATUS":
@@ -43,6 +40,7 @@ const addVacancies = (vacancies: VacancyResponseType[], total: number, favorites
     type: 'ADD-VACANCIES',
     payload: {list: vacancies, total, favorites}
 } as const)
+
 const addPageStatus = (status: JobStateStatusType) => ({type: 'ADD-PAGE-STATUS', payload: {status}} as const)
 export const toggleFavoriteJob = (id: number, isFavorite: boolean) => ({
     type: 'TOGGLE-FAVORITE-STATUS',
@@ -51,14 +49,7 @@ export const toggleFavoriteJob = (id: number, isFavorite: boolean) => ({
 
 const addCurrentPage = (page: number) => ({type: 'ADD-CURRENT-PAGE', payload: {page}} as const)
 
-export const fetchVacanciesFromQuery = () => (dispatch: AppDispatch, getState: () => AppStateType) => {
-    const searchQuery = getState().searchInput.query;
-    if (searchQuery) {
-        jobAPI.getVacanciesByKeyword(searchQuery).then(response => dispatch(addVacancies(response.objects, 125, [])))
-    }
-}
-
-export const fetchVacanciesByQueryString = (page: number = DEFAULT_PAGE_NUMBER, count: number = DEFAULT_ITEM_PER_PAGE) =>
+export const fetchVacanciesByQueryString = (page: number = PAGE.NUMBER, count: number = PAGE.ITEM) =>
     (dispatch: AppDispatch, getState: () => AppStateType) => {
         const state = getState();
         dispatch(addPageStatus(STATUSES.LOADING))
@@ -74,14 +65,9 @@ export const fetchVacanciesByQueryString = (page: number = DEFAULT_PAGE_NUMBER, 
                     dispatch(addVacancies(response.vacancies, response.total, response.favorites))
                     dispatch(addPageStatus(STATUSES.IDLE))
                 }
-            ).catch(err => addAppStatus(STATUSES.ERROR, err.message))
+            ).catch(err => dispatch(addAppStatus(STATUSES.ERROR, err.message)))
     }
 
-export const setVacancies = () => (dispatch: AppDispatch) => {
-    jobAPI.getVacancies().then(
-        response => dispatch(addVacancies(response, 125, []))
-    )
-}
 type JobStateType = {
     list: VacancyResponseType[]
     status: JobStateStatusType

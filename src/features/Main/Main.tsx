@@ -1,10 +1,10 @@
 import React from 'react';
 import styles from '../../App.module.css'
-import JobSearch from "../JobSearch/JobSearch";
+import Vacancies from "../Vacancies/Vacancies";
 const Main = () => {
     return (
         <main className={styles.main}>
-            <JobSearch/>
+            <Vacancies/>
         </main>
     );
 };

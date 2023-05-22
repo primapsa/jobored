@@ -1,5 +1,5 @@
 export const localStorageAPI = {
-    set: (name: string, id: number): Promise<string> =>
+    set: (name: string, id: number): Promise<number[] | string > =>
         new Promise((resolve, reject) => {
             const favorites: number[] = JSON.parse(localStorage.getItem(name) as string)
             let processed = [id]
@@ -8,7 +8,7 @@ export const localStorageAPI = {
             }
             try {
                 localStorage.setItem(name, JSON.stringify(processed));
-                resolve('success')
+                resolve(processed)
             } catch (err) {
                 reject(err)
             }
@@ -17,10 +17,14 @@ export const localStorageAPI = {
     get: (name: string): Promise<number[]> =>
         new Promise((resolve, reject) => {
            try {
-               const favorites: number[] = JSON.parse(localStorage.getItem(name) as string)
+               const favorites: number[] = JSON.parse(localStorage.getItem(name) as string) || []
                resolve(favorites)
            }catch (err){
                reject(err)
            }
-        })
+        }),
+    count: (name: string): number =>  {
+        const favorites = JSON.parse(localStorage.getItem(name) as string)
+        return favorites ? favorites.length : 0
+    }
 }
