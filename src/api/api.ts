@@ -1,44 +1,35 @@
 import axios from "axios";
-
-
-const ACCESS_TOKEN_OLD = 'v3.r.137440105.cfa6d9a0611280f33c689bbb574efb3279a5117e.7cf2fd32207e0b95a427a5aabc4c517ffaf8e033'
-const ACCESS_TOKEN = 'v3.r.137440105.1cf0bfe81117ede77c8e782d92ab23923aaaae46.85ae533d59ce156af7473a7d6e46456059f5622b'
-
-const SECRET_KEY = 'GEU4nvd3rej*jeh.eqp'
-const API_KEY = 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
-const AUTH_LOGIN = 'sergei.stralenia@gmail.com'
-const AUTH_PWD = 'paralect123'
-const CLIENT_ID = '2356'
-export const DEFAULT_PAGE_NUMBER = 0
-export const DEFAULT_ITEM_PER_PAGE = 4
-const CLIENT_HR = 0;
+import {AUTH} from "../const/auth";
+import {PAGE} from "../const/page";
 
 const axiosInstance = axios.create({
-    baseURL: 'https://startup-summer-2023-proxy.onrender.com/2.0/',
+    baseURL: AUTH.BASE_URL,
     headers: {
-        'Authorization': `Bearer ${ACCESS_TOKEN}`,
-        'x-secret-key': SECRET_KEY,
-        'X-Api-App-Id': API_KEY
+        'Authorization': `Bearer ${AUTH.TOKEN}`,
+        'x-secret-key': AUTH.SECRET_KEY,
+        'X-Api-App-Id': AUTH.API_KEY
     }
 })
 
 export const jobAPI = {
-    getVacancies: (page: number = DEFAULT_PAGE_NUMBER, count: number = DEFAULT_ITEM_PER_PAGE,): Promise<VacancyResponseType[]> =>
+    getVacancies: (page: number = PAGE.NUMBER, count: number = PAGE.ITEM,): Promise<VacancyResponseType[]> =>
         axiosInstance.get<GetVacanciesResponseType>(`vacancies/?count=${count}&page=${page}`)
             .then(response => response.data)
             .then(response => response.objects),
+
     getAuthToken: (): Promise<string> => axiosInstance
-        .get<AuthTokenResponseType>(`oauth2/password/?login=${AUTH_LOGIN}&password=${AUTH_PWD}&client_id${CLIENT_ID}=&client_secret=${API_KEY}&hr=${CLIENT_HR}`)
+        .get<AuthTokenResponseType>
+        (`oauth2/password/?login=${AUTH.LOGIN}&password=${AUTH.PWD}&client_id${AUTH.ID}=&client_secret=${AUTH.API_KEY}&hr=${AUTH.HR}`)
         .then(response => response.data.access_token),
 
-    getVacanciesById: (ids: number[], page: number = DEFAULT_PAGE_NUMBER, count: number = DEFAULT_ITEM_PER_PAGE,): Promise<VacancyResponseType[]> => {
+    getVacanciesById: (ids: number[], page: number = PAGE.NUMBER, count: number = PAGE.ITEM,): Promise<VacancyResponseType[]> => {
         const idsQuery = ids.join('&ids[]=')
         return ids.length ? axiosInstance.get<GetVacanciesResponseType>(`vacancies/?ids[]=${idsQuery}&page=${page}&count=${count}`)
             .then(response => response.data.objects) : Promise.resolve([])
     },
-    getVacanciesByQueryString: (query: string):  Promise<ResponseType> =>
+    getVacanciesByQueryString: (query: string): Promise<ResponseType> =>
         axiosInstance.get<GetVacanciesResponseType>(`vacancies/${query}`)
-        .then(response => response.data),
+            .then(response => response.data),
 
     getCatalogues: (): Promise<CataloguesType[]> => axiosInstance.get('catalogues/').then(response => response.data),
 }
@@ -154,18 +145,18 @@ export type VacancyResponseType = {
     longitude: null | string
 
 }
-type CatalogPositionsType =  {
+type CatalogPositionsType = {
     title_rus: string
     url_rus: string
-    title:string
-    id_parent:number
+    title: string
+    id_parent: number
     key: number
 }
-export type CataloguesType =  {
+export type CataloguesType = {
     title_rus: string
-    url_rus:string
+    url_rus: string
     title: string
     title_trimmed: string
     key: number
-    positions:CatalogPositionsType[]
+    positions: CatalogPositionsType[]
 }
