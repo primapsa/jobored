@@ -1,47 +1,63 @@
 import {jobAPI, VacancyResponseType} from "../api/api";
-import {AppDispatch, AppStateType} from "./store";
+import {AppDispatch} from "./store";
+import {setFavorite} from "./favoriteReducer";
+import {JobStateStatusType} from "./jobReducer";
+import {STATUSES} from "../const/statuses";
+import {addAppStatus} from "./appReducer";
+import {localStorageAPI} from "../api/localStorageAPI";
 
-const initial = {
-    current: {},
-    status: 'complete'
+const initial: VacancyStateType = {
+    current: {} as VacancyResponseType,
+    status: 'idle'
 }
 
-const addCurrentVacancy = (vacancy: VacancyResponseType) => ({type: 'ADD-CURRENT-VACANCY', payload: {vacancy}} as const)
-const addVacancyStatus = (status: string) => ({type: 'ADD-VACANCY-STATUS', payload: {status}} as const)
-
-export const vacancyReducer = (state: VacancyStateType = initial as VacancyStateType, action: ActionType): VacancyStateType => {
-
+export const vacancyReducer = (state: VacancyStateType = initial, action: ActionType): VacancyStateType => {
     switch (action.type) {
         case "ADD-CURRENT-VACANCY":
-            return {...state, current: action.payload.vacancy}
+            return {
+                ...state,
+                current: {
+                    ...action.payload.vacancy,
+                    favorite: action.payload.favorites.includes(action.payload.vacancy.id)
+                }
+            }
         case "ADD-VACANCY-STATUS":
             return {...state, status: action.payload.status}
+        case "TOGGLE-VACANCY-FAVORITE":
+            return {...state, current: {...state.current, favorite: !state.current.favorite}}
         default:
             return state
     }
 }
 
-export const setCurrentVacancy = (id: number) => (dispatch: AppDispatch, getState: () => AppStateType) => {
-    const vacancy = getState().job.list.find((v) => v.id === id)
-    if (!vacancy) {
-        jobAPI.getVacanciesById([id])
-            .then(response => {
-                if (response.total > 0) {
-                    dispatch(addCurrentVacancy(response.objects[0]))
-                } else {
-                    dispatch(addVacancyStatus('error'))
-                }
-            })
-            .catch(err => dispatch(addVacancyStatus('error')))
-    } else {
-        dispatch(addCurrentVacancy(vacancy))
-    }
+const addCurrentVacancy = (vacancy: VacancyResponseType, favorites: number[]) => ({
+    type: 'ADD-CURRENT-VACANCY',
+    payload: {vacancy, favorites}
+} as const)
+const addVacancyStatus = (status: JobStateStatusType) => ({type: 'ADD-VACANCY-STATUS', payload: {status}} as const)
+const toggleVacancyFavorite = () => ({type: 'TOGGLE-VACANCY-FAVORITE'} as const)
+
+export const setCurrentVacancy = (id: number) => (dispatch: AppDispatch) => {
+    dispatch(addVacancyStatus(STATUSES.LOADING))
+    localStorageAPI.get("jobored")
+        .then(favorites => jobAPI.getVacanciesById([id]).then(vacancies => ({vacancies, favorites})))
+        .then(response => {
+            dispatch(addCurrentVacancy(response.vacancies[0], response.favorites))
+            dispatch(addVacancyStatus(STATUSES.IDLE))
+        })
+        .catch(err => dispatch(addAppStatus(STATUSES.ERROR, err.message)))
+}
+
+export const toggleCurrentVacancyFavorite = (id: number, isFavorite: boolean) => (dispatch: AppDispatch) => {
+    dispatch(setFavorite(id, isFavorite))
+    dispatch(toggleVacancyFavorite())
 }
 
 type VacancyStateType = {
     current: VacancyResponseType
-    status: string
+    status: JobStateStatusType
 }
-type ActionType = AddCurrentVacancyType | AddVacancyStatusType;
+type ActionType = AddCurrentVacancyType | AddVacancyStatusType | ToggleVacancyType;
 type AddCurrentVacancyType = ReturnType<typeof addCurrentVacancy>
 type AddVacancyStatusType = ReturnType<typeof addVacancyStatus>
+type ToggleVacancyType = ReturnType<typeof toggleVacancyFavorite>
