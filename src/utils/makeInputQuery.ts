@@ -1,4 +1,4 @@
-import {FilterFieldsType, FilterStateType} from "../redux/filterReducer";
+import {FilterFieldsType} from "../redux/filterReducer";
 
 export const makeSearchtQuery = (keyword: string | undefined, filter: FilterFieldsType): string => {
     let queryParams = [];

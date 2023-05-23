@@ -4,6 +4,7 @@ import {PAGINATION} from "../../utils/pagination";
 import styles from "./Pagination.module.css"
 
 import {IconChevronRight,IconChevronLeft} from '@tabler/icons-react';
+import {COLORS} from "../../const/colors";
 const Pagination = ({pageCount, pageRange, onPageCallback, forcePage}: PaginationPropsType) => {
 
     const onPageChangeHandler = (page:PaginationOnPageType) => onPageCallback(page.selected)
@@ -17,8 +18,8 @@ const Pagination = ({pageCount, pageRange, onPageCallback, forcePage}: Paginatio
                                pageRangeDisplayed={pageRange}
                                marginPagesDisplayed={PAGINATION.MARGIN_PAGES}
                                breakLabel={PAGINATION.BREAK_LABEL}
-                               previousLabel={<IconChevronLeft height={15} color={'#7B7C88'}/>}
-                               nextLabel={<IconChevronRight height={15} color={'#7B7C88'}/>}
+                               previousLabel={<IconChevronLeft height={15} color={COLORS.GRAY600}/>}
+                               nextLabel={<IconChevronRight height={15} color={COLORS.GRAY600}/>}
                                containerClassName={styles.pagination}
                                activeLinkClassName={styles.active}
                                disabledClassName={styles.disabled}

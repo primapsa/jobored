@@ -1,6 +1,6 @@
 export const AUTH = {
     BASE_URL: 'https://startup-summer-2023-proxy.onrender.com/2.0/',
-    TOKEN: 'v3.r.137440105.1cf0bfe81117ede77c8e782d92ab23923aaaae46.85ae533d59ce156af7473a7d6e46456059f5622b',
+    TOKEN: 'v3.r.137440105.b0429c0504e0419bc83b3ccd6b96259599fcd92b.46b08d805d81dfd601b125cc2eefdb3273d7de2d',
     API_KEY: 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948',
     SECRET_KEY: 'GEU4nvd3rej*jeh.eqp',
     LOGIN: 'sergei.stralenia@gmail.com',

@@ -5,10 +5,11 @@ import {Button, Container, Paper} from "@mantine/core";
 import {useItemStyles} from "./itemStyle";
 import {IconMapPin} from '@tabler/icons-react';
 import Star from "../Star/Star";
+import {COLORS} from "../../const/colors";
 
 const Item = ({
                   id, profession, payment_from, payment_to, currency, type_of_work,
-                  town, favorite, favoriteCallback, blankCallback, style
+                  town, favorite, favoriteCallback, blankCallback
               }: ItemPropsType) => {
     const {classes} = useItemStyles()
     const salary = formatSalary(payment_from, payment_to)
@@ -36,7 +37,7 @@ const Item = ({
                 <span className={classes.itemWork}>{type_of_work}</span>
             </Container>
             <Container className={classes.itemFooter}>
-                <IconMapPin color={'#ACADB9'} height={20} width={20}/>
+                <IconMapPin color={COLORS.GRAY500} height={20} width={20}/>
                 <span className={classes.itemTown}>{town}</span>
             </Container>
         </Paper>
@@ -56,5 +57,4 @@ type ItemPropsType = {
     favorite: boolean
     favoriteCallback: (id: number, isFavorite: boolean) => void
     blankCallback: (id: number) => void
-    style?: any
 }
