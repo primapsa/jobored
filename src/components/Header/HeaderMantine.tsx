@@ -2,6 +2,7 @@ import {Container, Group, Header, Title} from '@mantine/core';
 import Logo from '../../img/logo/joboredLogo.svg';
 import {NavLink} from "react-router-dom";
 import {useStyles} from "./HeaderStyle";
+import {ROUTES} from "../../const/routes";
 
 export function HeaderSimple({links}: HeaderSimpleProps) {
     const {classes} = useStyles();
@@ -14,7 +15,7 @@ export function HeaderSimple({links}: HeaderSimpleProps) {
     return (
         <Header height={'100%'} className={classes.header}>
             <Container className={classes.container}>
-                <NavLink to={'/vacancies'} className={classes.home}>
+                <NavLink to={`/${ROUTES.VACANCIES}`} className={classes.home}>
                     <img src={Logo} alt={'logo'}/>
                     <Title order={1} className={classes.linkHeader}>Jobored</Title>
                 </NavLink>
