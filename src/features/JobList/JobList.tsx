@@ -27,7 +27,7 @@ const JobList = () => {
                                           blankCallback={blankCallback}
     />)
     return (
-       <Plug isActive={Boolean(list.length)}>
+       <Plug isActive={Boolean(list.length)} isButton={false}>
            <Container sx={{ padding: 0,margin: 0, display: "flex", flexDirection: "column", flexGrow: 1}}>
                {list}
            </Container>
