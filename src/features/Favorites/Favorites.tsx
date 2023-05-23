@@ -22,12 +22,10 @@ const Favorites = () => {
     const currentPage = useSelector<AppStateType, number>(state => state.favorite.page)
     const total = useSelector<AppStateType, number>(state => state.favorite.total)
 
-
     useEffect(() => {
         dispatch(addPageStatus(STATUSES.LOADING))
         dispatch<AppDispatch>(fetchFavorite(currentPage))
     }, [currentPage])
-
 
     const favorites = useSelector<AppStateType, VacancyResponseType[]>(state => state.favorite.vacancies)
     const status = useSelector<AppStateType, JobStateStatusType>(state => state.favorite.status)

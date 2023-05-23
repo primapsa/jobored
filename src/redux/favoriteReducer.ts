@@ -4,6 +4,7 @@ import {localStorageAPI} from "../api/localStorageAPI";
 import {JobStateStatusType, toggleFavoriteJob} from "./jobReducer";
 import {STATUSES} from "../const/statuses";
 import {addAppStatus} from "./appReducer";
+import {PAGE} from "../const/page";
 
 const initial: FavoriteStateType = {
     vacancies: [],
@@ -42,10 +43,16 @@ const removeFavorite = (id: number) => ({type: 'REMOVE-FAVORITE-VACANCY', payloa
 export const addPageFavorite = (page: number) => ({type: 'ADD-PAGE-FAVORITE', payload: {page}} as const)
 const addTotalFavorites = (total: number) => ({type: 'ADD-TOTAL-FAVORITE', payload: {total}} as const)
 
-export const setFavorite = (id: number, isFavorite: boolean) => (dispatch: AppDispatch) => {
+export const setFavorite = (id: number, isFavorite: boolean) => (dispatch: AppDispatch, getState: () => AppStateType) => {
+    const activePage = getState().favorite.page
     localStorageAPI.set('jobored', id).then(response => {
+            const total = response.length
+            const pages = Math.ceil(total / PAGE.ITEM)
+            if (activePage >= pages) {
+                dispatch(addPageFavorite(pages - 1 || PAGE.NUMBER))
+            }
             dispatch(toggleFavoriteJob(id, isFavorite))
-            dispatch(addTotalFavorites(response.length))
+            dispatch(addTotalFavorites(total))
         }
     ).catch(err => dispatch(addAppStatus(STATUSES.ERROR, err.message)))
 }
