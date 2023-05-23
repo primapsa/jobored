@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
-import {Button, Flex, NumberInput, Paper, Select, Text} from "@mantine/core";
-import {IconChevronDown, IconX} from '@tabler/icons-react';
+import {Button, Flex, NumberInput, Paper, Text} from "@mantine/core";
+import {IconX} from '@tabler/icons-react';
 import {CataloguesType} from "../../api/api";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, AppStateType} from "../../redux/store";
@@ -15,7 +15,7 @@ import {
 import {fetchVacanciesByQueryString} from "../../redux/jobReducer";
 import {useFilterStyle} from "./filterStyle";
 import {INPUTS} from "../../const/inputs";
-import {COLORS} from "../../const/colors";
+import FilterSelect from "../FilterSelect/FilterSelect";
 
 const Filter = () => {
     const {classes} = useFilterStyle();
@@ -53,21 +53,10 @@ const Filter = () => {
                     </Button>
                 </Flex>
                 <form>
-                    <Select
-                        data-elem="industry-select"
-                        mt="md" withinPortal
-                        data={catalog}
-                        placeholder="Выберите отрасль"
-                        label={'Отрасль'}
-                        value={currentCatalog}
-                        onChange={currentCatalogHandler}
-                        classNames={{
-                            label: classes.title,
-                            input: classes.select,
-                            rightSection: classes.selectRightSection
-                        }}
-                        rightSection={<IconChevronDown color={COLORS.GRAY500}/>}/>
-
+                    <FilterSelect
+                        catalog={catalog}
+                        currentCatalog={currentCatalog}
+                        callBack={currentCatalogHandler}/>
                     <NumberInput
                         data-elem="salary-from-input"
                         placeholder="От"
