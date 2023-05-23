@@ -43,6 +43,16 @@ export const useFilterStyle = createStyles((theme) => ({
         fontWeight: 500,
         fontSize: rem('14px'),
         lineHeight: rem('20px'),
+
+        '&: hover': {
+            color: `#92C1FF`,
+            backgroundColor: "transparent",
+
+        },
+        '&: active': {
+            color: `#5E96FC`
+        }
+
     },
     label: {
         display: "flex",
@@ -65,8 +75,15 @@ export const useFilterStyle = createStyles((theme) => ({
         },
 
     },
+    selectItem: {
+        '&:hover': {
+            background: `#DEECFF`,
+            borderRadius: rem(8)
+        }
+    },
     selectRightSection: {
-        right: rem(6),
+        width: `auto`,
+        right: rem(12),
     },
     numberTitle: {
         marginTop: rem(20),
@@ -83,6 +100,18 @@ export const useFilterStyle = createStyles((theme) => ({
         color: "#ACADB9",
         backgroundColor: "transparent",
         cursor: "pointer",
+        '&:hover': {
+            color: `#92C1FF`,
+            backgroundColor: "transparent !important",
+        },
+        '&:disabled': {
+            color: "#ACADB9 !important",
+        },
+        '&:active': {
+            color: "#5E96FC"
+        }
+
+
     },
     numberDown: {
         alignItems: "flex-start",
@@ -90,12 +119,23 @@ export const useFilterStyle = createStyles((theme) => ({
         color: "#ACADB9",
         backgroundColor: "transparent",
         cursor: "pointer",
+        '&:disabled': {
+            color: "#ACADB9",
+        },
+        '&:hover': {
+            color: `#92C1FF`,
+            backgroundColor: "transparent !important",
+        },
+        '&:active': {
+            color: "#5E96FC"
+        }
+
     },
     imputTo: {
         marginTop: rem(8)
     },
     submit: {
-       width: rem(275),
+        width: rem(275),
         height: rem(40),
         padding: `${rem(4)} ${rem(20)}`,
         marginTop: rem(20),
@@ -107,10 +147,15 @@ export const useFilterStyle = createStyles((theme) => ({
         [theme.fn.smallerThan('md')]: {
             width: `100%`
         },
+        '&:hover': {
+            backgroundColor: '#92C1FF',
+        },
+        '&:active': {
+            backgroundColor: '#3B7CD3',
+        }
+
 
     }
-
-
 
 
 }))

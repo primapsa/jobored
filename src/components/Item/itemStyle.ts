@@ -191,10 +191,6 @@ export const useItemStyles = createStyles((theme) => ({
         height: rem(22),
         backgroundColor: "transparent",
         border: 0,
-        '&:hover': {
-            opacity: '40%'
-        }
-
     },
     buttonRightIcon: {
         margin: 0

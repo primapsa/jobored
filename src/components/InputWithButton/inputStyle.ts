@@ -30,6 +30,7 @@ export const useInputsStyles = createStyles((theme) => ({
         background: `#5E96FC`,
         borderRadius: rem(8),
         fontWeight: 500,
+        backgroundColor: '#5E96FC',
         fontSize: rem(14),
         lineHeight: rem(21),
         color: `#FFFFFF`,
@@ -39,6 +40,13 @@ export const useInputsStyles = createStyles((theme) => ({
             fontSize: rem(12)
             
         },
+        '&:hover': {
+            backgroundColor: '#92C1FF',
+        },
+        '&:active': {
+            backgroundColor: '#3B7CD3',
+        }
+
 
     }
 

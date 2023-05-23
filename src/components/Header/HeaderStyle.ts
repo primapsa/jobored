@@ -44,7 +44,8 @@ export const useStyles = createStyles((theme) => ({
         [theme.fn.smallerThan('xs')]: {
             marginLeft: rem(10)
         },
-        marginLeft: rem(280)
+        marginLeft: rem(280),
+
     },
     home: {
         display: 'flex',
@@ -77,7 +78,7 @@ export const useStyles = createStyles((theme) => ({
         },
         '&:hover':
             {
-                backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+                backgroundColor: "transparent",
             },
         [theme.fn.smallerThan('sm')]: {
             marginRight: rem(20)
