@@ -1,15 +1,16 @@
 import React from 'react';
 import {NavLink} from "react-router-dom";
+import {ROUTES} from "../../const/routes";
 
 const Menu = () => {
     return (
         <div>
            <ul>
                <li>
-                   <NavLink to={'/vacancies'}>Поиск Вакансий</NavLink>
+                   <NavLink to={`/${ROUTES.VACANCIES}`}>Поиск Вакансий</NavLink>
                </li>
                <li>
-                   <NavLink to={'/favorites'}>Избранное</NavLink>
+                   <NavLink to={`/${ROUTES.FAVORITES}`}>Избранное</NavLink>
                </li>
            </ul>
         </div>
