@@ -12,13 +12,14 @@ const initial: VacancyStateType = {
 }
 
 export const vacancyReducer = (state: VacancyStateType = initial, action: ActionType): VacancyStateType => {
+
     switch (action.type) {
         case "ADD-CURRENT-VACANCY":
             return {
                 ...state,
                 current: {
                     ...action.payload.vacancy,
-                    favorite: action.payload.favorites.includes(action.payload.vacancy.id)
+                    favorite: action.payload.favorites.includes(action.payload.vacancy?.id)
                 }
             }
         case "ADD-VACANCY-STATUS":
