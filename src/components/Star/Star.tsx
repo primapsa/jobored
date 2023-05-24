@@ -20,7 +20,7 @@ const Star = ({isFilled}: StarPropsType) =>{
     )
 }
 
-export default Star;
+export default React.memo(Star);
 
 type StarPropsType = {
     isFilled: boolean

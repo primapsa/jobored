@@ -1,3 +1,4 @@
+import React, {useCallback} from 'react';
 import {Button, TextInput} from '@mantine/core';
 import {fetchVacanciesByQueryString} from "../../redux/jobReducer";
 import {useDispatch, useSelector} from "react-redux";
@@ -12,8 +13,9 @@ function InputWithButton() {
     const {classes} = useInputsStyles()
     const dispatch = useDispatch()
     const inputValue = useSelector<AppStateType, string>(state => state.searchInput.query)
-    const onClickHandler = () => dispatch<AppDispatch>(fetchVacanciesByQueryString())
-    const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => dispatch<AppDispatch>(addSearchRequest(e.target.value))
+    const onClickHandler = useCallback(() => dispatch<AppDispatch>(fetchVacanciesByQueryString()),[dispatch])
+    const onChangeHandler = useCallback((e: ChangeEvent<HTMLInputElement>) =>
+        dispatch<AppDispatch>(addSearchRequest(e.target.value)),[dispatch])
 
     return (
 
@@ -22,10 +24,14 @@ function InputWithButton() {
             icon={<SearchIcon/>}
             size="md"
             rightSection={
-                <Button data-elem="search-button" className={classes.button} onClick={onClickHandler}>{'Поиск'}</Button>
+                <Button
+                    data-elem="search-button"
+                    className={classes.button}
+                    onClick={onClickHandler}>
+                    {'Поиск'}
+                </Button>
             }
             placeholder="Введите название вакансии"
-            rightSectionWidth={42}
             value={inputValue}
             onChange={onChangeHandler}
             classNames={{
@@ -36,4 +42,4 @@ function InputWithButton() {
     );
 }
 
-export default InputWithButton
+export default React.memo(InputWithButton)

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 import {Button, Flex, NumberInput, Paper, Text} from "@mantine/core";
 import {IconX} from '@tabler/icons-react';
 import {CataloguesType} from "../../api/api";
@@ -28,13 +28,19 @@ const Filter = () => {
     const paymentFromValue = useSelector<AppStateType, PaymentType>(state => state.filter.fields.paymentFrom)
     const paymentToValue = useSelector<AppStateType, PaymentType>(state => state.filter.fields.paymentTo)
 
-    const catalog = catalogState.map(c => ({'value': String(c.key), 'label': String(c.title_trimmed)}))
+    const catalog = useMemo(() => catalogState
+        .map(c => ({'value': String(c.key), 'label': String(c.title_trimmed)})),[catalogState])
 
-    const currentCatalogHandler = (id: string | null) => dispatch(addCurrentCatalog(id))
-    const addPaymentFromHandler = (value: string | number) => dispatch(addPaymentFromValue(Number(value)))
-    const addPaymentToHandler = (value: number | string) => dispatch(addPaymentToValue(Number(value)))
-    const onClickHandler = () => dispatch<AppDispatch>(fetchVacanciesByQueryString())
-    const resetFilterHandler = () => dispatch<AppDispatch>(clearSearchQueries())
+    const currentCatalogHandler = useCallback((id: string | null) =>
+        dispatch(addCurrentCatalog(id)),[dispatch])
+    const addPaymentFromHandler = useCallback((value: string | number) =>
+        dispatch(addPaymentFromValue(Number(value))),[dispatch])
+    const addPaymentToHandler = useCallback((value: number | string) =>
+        dispatch(addPaymentToValue(Number(value))),[dispatch])
+    const onClickHandler = useCallback(() =>
+        dispatch<AppDispatch>(fetchVacanciesByQueryString()),[dispatch])
+    const resetFilterHandler = useCallback(() =>
+        dispatch<AppDispatch>(clearSearchQueries()),[dispatch])
 
     return (
         <Paper className={classes.container}>
@@ -92,4 +98,4 @@ const Filter = () => {
     );
 };
 
-export default Filter;
+export default React.memo(Filter);

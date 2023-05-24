@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import Filter from "../../components/Filter/Filter";
 import InputWithButton from "../../components/InputWithButton/InputWithButton";
 import JobList from "../JobList/JobList";
@@ -21,7 +21,9 @@ const Vacancies = () => {
     const status = useSelector<AppStateType, JobStateStatusType>(state => state.job.status)
     useEffect(() => dispatch<AppDispatch>(fetchVacanciesByQueryString(currentPage)), [])
     const total = useSelector<AppStateType, number>(state => state.job.total)
-    const paginationHandler = (page: number) =>  dispatch<AppDispatch>(fetchVacanciesByQueryString(page))
+
+    const paginationHandler = useCallback((page: number) =>
+        dispatch<AppDispatch>(fetchVacanciesByQueryString(page)),[dispatch])
 
     const totalPages = Math.ceil(total / PAGE.ITEM)
 
@@ -44,4 +46,4 @@ const Vacancies = () => {
     );
 };
 
-export default Vacancies;
+export default React.memo(Vacancies);

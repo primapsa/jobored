@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {formatSalary} from "../../utils/formatSalary";
 import {Link} from "react-router-dom";
 import {Button, Container, Paper} from "@mantine/core";
@@ -9,24 +9,29 @@ import {COLORS} from "../../const/colors";
 
 const Item = ({
                   id, profession, payment_from, payment_to, currency, type_of_work,
-                  town, favorite, favoriteCallback, blankCallback
+                  town, favorite, favoriteCallback
               }: ItemPropsType) => {
+
     const {classes} = useItemStyles()
     const salary = formatSalary(payment_from, payment_to)
     const delimiter = salary ? '•' : ''
     const onClickHandler = () => favoriteCallback(id, !favorite)
-    const onClickBlankHandler = () => {
-    }
+
     return (
         <Paper className={classes.item} data-elem={`vacancy-${id}`}>
             <Container className={classes.itemHeader}>
-                <Link to={`/vacancy/${id}`} className={classes.itemLink}
-                      onClick={onClickBlankHandler}>{profession}</Link>
+                <Link
+                    to={`/vacancy/${id}`}
+                    className={classes.itemLink}>
+                    {profession}
+                </Link>
                 <Button
                     data-elem={`vacancy-${id}-shortlist-button`}
                     className={classes.star}
-                    classNames={{rightIcon: classes.buttonRightIcon,
-                    root: classes.buttonRoot}}
+                    classNames={{
+                        rightIcon: classes.buttonRightIcon,
+                        root: classes.buttonRoot
+                    }}
                     onClick={onClickHandler}
                     rightIcon={<Star isFilled={favorite}/>}
                 ></Button>
@@ -44,7 +49,7 @@ const Item = ({
     );
 };
 
-export default Item;
+export default React.memo(Item);
 
 type ItemPropsType = {
     id: number
@@ -56,5 +61,5 @@ type ItemPropsType = {
     town: string
     favorite: boolean
     favoriteCallback: (id: number, isFavorite: boolean) => void
-    blankCallback: (id: number) => void
+    blankCallback?: (id: number) => void
 }
