@@ -1,10 +1,10 @@
 import React from 'react';
 import {formatSalary} from "../../utils/formatSalary";
-import {Link} from "react-router-dom";
 import {Button, Container, Paper} from "@mantine/core";
 import {useItemStyles} from "./itemStyle";
 import {IconMapPin} from '@tabler/icons-react';
 import Star from "../Star/Star";
+import {COLORS} from "../../const/colors";
 
 const ItemSimple = ({
                         id, profession, payment_from, payment_to, currency, type_of_work,
@@ -36,7 +36,7 @@ const ItemSimple = ({
                 <span className={classes.itemWorkSimple}>{type_of_work}</span>
             </Container>
             <Container className={classes.itemFooter}>
-                <IconMapPin color={'#ACADB9'} height={20} width={20}/>
+                <IconMapPin color={COLORS.GRAY500} height={20} width={20}/>
                 <span className={classes.itemTownSimple}>{town}</span>
             </Container>
         </Paper>

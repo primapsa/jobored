@@ -1,5 +1,5 @@
 import React from 'react';
-import {TypographyStylesProvider, Paper, Container, createStyles, rem} from "@mantine/core";
+import {Paper, TypographyStylesProvider} from "@mantine/core";
 import {useDescriptopnStyles} from "./descriptionStyle";
 
 const Description = ({text}: DescriptionPropsType) => {
