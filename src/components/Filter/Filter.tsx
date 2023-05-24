@@ -12,10 +12,11 @@ import {
     fetchActualCatalogues,
     PaymentType
 } from "../../redux/filterReducer";
-import {fetchVacanciesByQueryString} from "../../redux/jobReducer";
+import {fetchVacanciesByQueryString, JobStateStatusType} from "../../redux/jobReducer";
 import {useFilterStyle} from "./filterStyle";
 import {INPUTS} from "../../const/inputs";
 import FilterSelect from "../FilterSelect/FilterSelect";
+import {STATUSES} from "../../const/statuses";
 
 const Filter = () => {
     const {classes} = useFilterStyle();
@@ -27,20 +28,21 @@ const Filter = () => {
     const currentCatalog = useSelector<AppStateType, null | string>(state => state.filter.fields.currentCatalog)
     const paymentFromValue = useSelector<AppStateType, PaymentType>(state => state.filter.fields.paymentFrom)
     const paymentToValue = useSelector<AppStateType, PaymentType>(state => state.filter.fields.paymentTo)
+    const status = useSelector<AppStateType, JobStateStatusType>(state => state.job.status)
 
     const catalog = useMemo(() => catalogState
-        .map(c => ({'value': String(c.key), 'label': String(c.title_trimmed)})),[catalogState])
+        .map(c => ({'value': String(c.key), 'label': String(c.title_trimmed)})), [catalogState])
 
     const currentCatalogHandler = useCallback((id: string | null) =>
-        dispatch(addCurrentCatalog(id)),[dispatch])
+        dispatch(addCurrentCatalog(id)), [dispatch])
     const addPaymentFromHandler = useCallback((value: string | number) =>
-        dispatch(addPaymentFromValue(Number(value))),[dispatch])
+        dispatch(addPaymentFromValue(Number(value))), [dispatch])
     const addPaymentToHandler = useCallback((value: number | string) =>
-        dispatch(addPaymentToValue(Number(value))),[dispatch])
+        dispatch(addPaymentToValue(Number(value))), [dispatch])
     const onClickHandler = useCallback(() =>
-        dispatch<AppDispatch>(fetchVacanciesByQueryString()),[dispatch])
+        dispatch<AppDispatch>(fetchVacanciesByQueryString()), [dispatch])
     const resetFilterHandler = useCallback(() =>
-        dispatch<AppDispatch>(clearSearchQueries()),[dispatch])
+        dispatch<AppDispatch>(clearSearchQueries()), [dispatch])
 
     return (
         <Paper className={classes.container}>
@@ -91,7 +93,13 @@ const Filter = () => {
                             controlDown: classes.numberDown,
                             rightSection: classes.selectRightSection
                         }}/>
-                    <Button data-elem="search-button" className={classes.submit} onClick={onClickHandler}>Применить</Button>
+                    <Button
+                        data-elem="search-button"
+                        className={classes.submit}
+                        onClick={onClickHandler}
+                        disabled={status === STATUSES.LOADING}>
+                        Применить
+                    </Button>
                 </form>
             </Flex>
         </Paper>
